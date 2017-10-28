@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BasicPlot", "BasicPlot\BasicPlot.pyproj", "{4767A8F7-739D-47FA-835C-46F64B436E3E}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "UI_Rigol_1", "DAckMeasure\UI_Rigol_1.pyproj", "{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "foolin", "foolin\foolin.pyproj", "{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "pyplot", "pyplot\pyplot.pyproj", "{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4767A8F7-739D-47FA-835C-46F64B436E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4767A8F7-739D-47FA-835C-46F64B436E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
