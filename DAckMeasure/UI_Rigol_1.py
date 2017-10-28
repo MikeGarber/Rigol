@@ -3,6 +3,7 @@
 import tkinter as tk
 import os
 import DAckMeasure
+import chan
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -14,25 +15,23 @@ class MainApplication(tk.Frame):
         self.timebase=1000
 
         scope=DAckMeasure.DAckMeasure()
-        self.chans = []
-        for i in range(4):
-            self.chans.append(tk.IntVar())
-        #self.startButton = tk.Button(self, text="Start/Restart", command=self.onStartButton)
-        #self.startButton.grid(row=0, column=0)
-        #self.pauseResumeButton = tk.Button(self, text="Pause", state=tk.DISABLED, command=self.onPauseResumeButton)
-        #self.pauseResumeButton.grid(row=1, column=0)
         self.StartStopButton = tk.Button(self, text="Start", command=self.onStartStopButton)
         self.StartStopButton.grid(row=0, column=0)
         self.showDataButton = tk.Button(self, text="Show Data", command=self.onShowDataButton)
         self.showDataButton.grid(row=1, column=0)
-        self.Chan1Button = tk.Checkbutton(self, text="Chan 1", variable=self.chans[0])
-        self.Chan1Button.grid(row=0, column=1)
-        self.Chan2Button = tk.Checkbutton(self, text="Chan 2", variable=self.chans[1])
-        self.Chan2Button.grid(row=1, column=1)
-        self.Chan3Button = tk.Checkbutton(self, text="Chan 3", variable=self.chans[2])
-        self.Chan3Button.grid(row=2, column=1)
-        self.Chan4Button = tk.Checkbutton(self, text="Chan 4", variable=self.chans[3])
-        self.Chan4Button.grid(row=3, column=1)
+ 
+ 
+        self.chans = []
+        for i in range(1):
+            self.chans.append(chan.chan(parent, i))
+        #self.Chan1Button = tk.Checkbutton(self, text="Chan 1", variable=self.chans[0])
+        #self.Chan1Button.grid(row=0, column=1)
+        #self.Chan2Button = tk.Checkbutton(self, text="Chan 2", variable=self.chans[1])
+        #self.Chan2Button.grid(row=1, column=1)
+        #self.Chan3Button = tk.Checkbutton(self, text="Chan 3", variable=self.chans[2])
+        #self.Chan3Button.grid(row=2, column=1)
+        #self.Chan4Button = tk.Checkbutton(self, text="Chan 4", variable=self.chans[3])
+        #self.Chan4Button.grid(row=3, column=1)
         self.timeText = tk.Label(self)
         self.timeText.grid(row=3, column=0)
 
@@ -92,7 +91,8 @@ class MainApplication(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Rigol Data Acquisition Tool Ver 0.0")
-    MainApplication(root).pack(side="top", fill="both", expand=True)
+#    MainApplication(root).pack(side="top", fill="both", expand=True)
+    MainApplication(root)
     root.mainloop()
     
 

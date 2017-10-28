@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="chan.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DAckMeasure.py" />
     <Compile Include="UI_Rigol_1.py" />
   </ItemGroup>
