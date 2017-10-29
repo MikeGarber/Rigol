@@ -22,7 +22,7 @@ class MainApplication(tk.Frame):
  
         self.chans = []
         for i in range(4):
-            self.chans.append(chan.chan(self, i))
+            self.chans.append(chan.chan(self, scope, i))
  
         self.timeText = tk.Label(self)      #status??
         self.timeText.grid(row=3, column=0)
@@ -67,8 +67,8 @@ class MainApplication(tk.Frame):
             
     def onShowDataButton(self):
            for i in range(4):
-                data = self.chans[i].getData()
-                print(data)
+                scopeData = self.chans[i].getScopeData()
+                print(scopeData.data)
 
     def onTimeUpdate(self):
         if (self.running):      

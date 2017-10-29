@@ -2,40 +2,54 @@ import tkinter as tk
 from tkinter import ttk
 
 class chan(object):
-    def __init__(self, root, chanNum):
+    def __init__(self, root, scope, chanNum):
         self.startRow=0
         self.startCol=1
         self.chanNum = chanNum
+        self.scope = scope
         self.combo(root)
-        self.scopeData = []
+        self.scopeData = scopeData()
 
     def combo(self, root):
-        self.box = ttk.Combobox(root)
+        self.plotSelector = ttk.Combobox(root)
         self.values = ['Off', 'Plot 1', 'Plot 2']
-        self.box['values'] = self.values#('Off', 'Plot 1', 'Plot 2')
-        self.box.current(0)
-        self.box.grid(column=self.startCol+1, row=self.startRow+self.chanNum)
+        self.plotSelector['values'] = self.values#('Off', 'Plot 1', 'Plot 2')
+        self.plotSelector.current(0)
+        self.plotSelector.grid(column=self.startCol+1, row=self.startRow+self.chanNum)
         self.timeText = tk.Label(root, text="Chan"+str(self.chanNum+1), justify='left')
         self.timeText.grid(column=self.startCol, row=self.startRow+self.chanNum)
 
     def reset(self):
-        del self.scopeData[:]
+        self.scopeData.reset()
         self.tstCounter=0
-        print("**** reset")
-        self.boxText = self.getSetting()
+        self.plotNum = self.getPlotNum()
+        self.scopeData.plotNum = self.plotNum
 
-    def getSetting(self):
-        return self.box.get()
-
-    def getData(self):
+    def getScopeData(self):
         return self.scopeData
 
     def update(self):
-        if (self.boxText == self.values[0]):
+        if (self.plotNum==0):
             return
-        self.scopeData.append(self.chanNum*self.tstCounter)
-        self.tstCounter += 1
-        if (self.boxText == self.values[1]):
-            print("Plot 1 update chan "+ str(self.chanNum+1))
-        elif (self.boxText == self.values[2]):
-            print("Plot 2 update chan "+ str(self.chanNum+1))
+        self.scopeData.append(self.scope.measureChan(self.chanNum))
+
+    def getPlotNum(self):
+        if (self.plotSelector.get() == self.values[1]):
+            return 1
+        elif (self.plotSelector.get() == self.values[2]):
+            return 2
+        return 0
+
+class scopeData(object):
+    def __init__(self):
+        self.data = []
+        self.reset()
+        self.plotNum=0
+
+    def reset(self):
+        self.min = self.max = 0
+        del self.data[:]
+
+    def append(self, value):
+        self.data.append(value)
+

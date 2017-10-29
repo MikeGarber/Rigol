@@ -41,5 +41,7 @@ class DAckMeasure(object):
         return self.rm.get_instrument(usb[0])
 
 
-    def measureChan(chanNum):
-        pass
+    def measureChan(self, chanNum):
+        self.scope.write(":MEAS:SOUR CHAN"+str(chanNum+1))
+        return self.scope.query_ascii_values(":MEAS:ITEM? VMAX")
+
