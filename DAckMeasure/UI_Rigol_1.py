@@ -29,10 +29,10 @@ class MainApplication(tk.Frame):
 
         vcmd = (self.register(self.validate),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
         self.timebaseBox = tk.Entry(self, validate = 'key', validatecommand = vcmd, justify='right')
-        self.timebaseBox.config(text="1")
+        self.timebaseBox.insert(0, "1")
+#        self.timebaseBox.config(text="1")
         self.timebaseBox.grid(row=4, column=0)
         self.timebaseBox.focus()
-        self.timebaseBox.config(text="1")
 
         tk.Label(self, text="(Sec)", justify='right').grid(row=4, column=2)
         tk.Label(self, text="Timebase", justify='left').grid(row=4, column=1)
@@ -55,7 +55,7 @@ class MainApplication(tk.Frame):
         self.StartStopButton.config(text=("Stop", "Start")[self.running])
         self.running= not self.running
         if (self.running):      #if Starting Now !!!!!
-            self.timebase=int(self.timebaseBox.get())*1000
+            self.timebase=int(float(self.timebaseBox.get())*1000)
             print("starting.....")
             for i in range(4):
                 self.chans[i].reset()
