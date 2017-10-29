@@ -1,9 +1,9 @@
-
-#from tkinter import *
 import tkinter as tk
 import os
 import DAckMeasure
 import chan
+#import date
+import datetime
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -20,34 +20,27 @@ class MainApplication(tk.Frame):
         self.showDataButton = tk.Button(self, text="Show Data", command=self.onShowDataButton)
         self.showDataButton.grid(row=1, column=0)
  
- 
         self.chans = []
-        for i in range(1):
-            self.chans.append(chan.chan(parent, i))
-        #self.Chan1Button = tk.Checkbutton(self, text="Chan 1", variable=self.chans[0])
-        #self.Chan1Button.grid(row=0, column=1)
-        #self.Chan2Button = tk.Checkbutton(self, text="Chan 2", variable=self.chans[1])
-        #self.Chan2Button.grid(row=1, column=1)
-        #self.Chan3Button = tk.Checkbutton(self, text="Chan 3", variable=self.chans[2])
-        #self.Chan3Button.grid(row=2, column=1)
-        #self.Chan4Button = tk.Checkbutton(self, text="Chan 4", variable=self.chans[3])
-        #self.Chan4Button.grid(row=3, column=1)
-        self.timeText = tk.Label(self)
+        for i in range(4):
+            self.chans.append(chan.chan(self, i))
+ 
+        self.timeText = tk.Label(self)      #status??
         self.timeText.grid(row=3, column=0)
 
         vcmd = (self.register(self.validate),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
-        self.timebaseBox = tk.Entry(self, validate = 'key', validatecommand = vcmd, justify='right', text="1")
+        self.timebaseBox = tk.Entry(self, validate = 'key', validatecommand = vcmd, justify='right')
+        self.timebaseBox.config(text="1")
         self.timebaseBox.grid(row=4, column=0)
         self.timebaseBox.focus()
-        self.timeText = tk.Label(self, text="Sec", justify='left')
-        self.timeText.grid(row=4, column=1)
+        self.timebaseBox.config(text="1")
 
-        self.onTimeUpdate()
+        tk.Label(self, text="(Sec)", justify='right').grid(row=4, column=2)
+        tk.Label(self, text="Timebase", justify='left').grid(row=4, column=1)
 
     def validate(self, action, index, value_if_allowed, prior_value, text, validation_type, trigger_type, widget_name):
         # action=1 -> insert
         if(action=='1'):
-            if text in '0123456789':
+            if text in '0123456789.':
                 try:
                     float(value_if_allowed)
                     return True
@@ -58,41 +51,40 @@ class MainApplication(tk.Frame):
         else:
             return True
     
-    def onPauseResumeButton(self):
-        PauseButTxt="Pause"
-        runningState=True
-        startButEnab=tk.DISABLED
-        if (self.running):
-            PauseButTxt="Resume"
-            runningState=False
-            startButEnab=tk.NORMAL
-        self.pauseResumeButton.config(text=PauseButTxt)
-        self.startButton.config(state=startButEnab)
-        self.running=runningState
- 
     def onStartStopButton(self):
         self.StartStopButton.config(text=("Stop", "Start")[self.running])
         self.running= not self.running
-        if (self.running):
+        if (self.running):      #if Starting Now !!!!!
             self.timebase=int(self.timebaseBox.get())*1000
-            self.elapsed=0
+            print("starting.....")
+            for i in range(4):
+                self.chans[i].reset()
+
+            self.onTimeUpdate()     #1st update; will perpetuatethe rest
+
+            self.startDateTime = datetime.datetime.now()
+            print(self.startDateTime)
             
     def onShowDataButton(self):
-        pass
+           for i in range(4):
+                data = self.chans[i].getData()
+                print(data)
 
     def onTimeUpdate(self):
-        if (self.running):
+        if (self.running):      
             self.elapsed += self.timebase/1000
             self.timeText.config(text=self.elapsed)
-        self.after(self.timebase, self.onTimeUpdate)
+            for i in range(4):
+                self.chans[i].update()
+            self.after(self.timebase, self.onTimeUpdate)
 
 #########################################
     
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Rigol Data Acquisition Tool Ver 0.0")
-#    MainApplication(root).pack(side="top", fill="both", expand=True)
-    MainApplication(root)
+    MainApplication(root).pack(side="top", fill="both", expand=True)
+#    MainApplication(root)
     root.mainloop()
     
 
