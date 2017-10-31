@@ -1,8 +1,6 @@
-import numpy
-import matplotlib.pyplot as plot
 import sys
 import visa
-import math
+#import math
 
 class DAckMeasure(object):
     """access to the Rigol, and associated tasks"""
@@ -16,20 +14,13 @@ class DAckMeasure(object):
         self.connected=False
         self.scope=None
         self.scope=self.connect()
-        self.scope=self.connect()
         # Stop the oscilloscope.
-        if (self.scope is not None):
-            print("Yes scope")
-        else:
-            print("Nope scope")
-
+        if (self.scope is not None): print("Yes scope")
+        else:                        print("Nope scope")
        
     def connect(self):
         if (self.scope is not None):
-            print ("already there")
             return self.scope
-
-        print ("gonna try")
         # Get the USB device, e.g. 'USB0::0x1AB1::0x0588::DS1ED141904883'
         instruments = self.rm.list_resources()
         usb = list(filter(lambda x: 'USB' in x, instruments))
@@ -37,11 +28,9 @@ class DAckMeasure(object):
             print ('Bad instrument list', instruments)
             return None
 
-        # Open connection to oscilloscole
+        # Open connection to oscilloscope
         return self.rm.get_instrument(usb[0])
-
 
     def measureChan(self, chanNum):
         self.scope.write(":MEAS:SOUR CHAN"+str(chanNum+1))
-        return self.scope.query_ascii_values(":MEAS:ITEM? VMAX")
-
+        return self.scope.query_ascii_values(":MEAS:ITEM? VMAX")[0]

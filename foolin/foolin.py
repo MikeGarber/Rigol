@@ -1,26 +1,34 @@
-import tkinter as tk
-import os
-import importedChan
+class scopeData(object):
+    def __init__(self, data):
+        self.data = data
 
-class MainApplication(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        container = tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.parent = parent
+    def reset():
+        del self.data[:]
 
-        tk.Button(self, text="main app").grid(row=0, column=0)
-        self.chanFunction()       #col=1, works fine, without the class included
-        sameModuleChan(self)      #col=2        
-        importedChan.importedChan(self)     #col=3 including this is ??
-
-    def chanFunction(root):
-        tk.Button(root, text="chanFunction").grid(row=0, column=1)
+class chan(object):
+    def __init__(self, data):
+        self.scopeData = scopeData(data)
 
 
-class sameModuleChan():
-    def __init__(self, parent):
-        tk.Button(parent, text="sameModuleChan").grid(row=0, column=2)
+    def getScopeData(self):
+        return self.scopeData
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    MainApplication(root).pack(side="top", fill="both", expand=True)
-    root.mainloop()
+    def setScopeData(self, newFromFileLoad):
+#        del self.scopeData
+        self.scopeData= newFromFileLoad
+
+
+
+chans = []
+for i in range(4):
+    chans.append(chan([1,2,3,4]))
+
+print(type(chans))
+print(type(chans[0]))
+sdNew = scopeData([5,6,7])
+chans[0].setScopeData(sdNew)
+sdCheck = chans[0].getScopeData()
+
+print(type(chans[1]))
+sd2 = chans[1].getScopeData()
+chans[1].setScopeData(sd2)
