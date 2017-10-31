@@ -1,26 +1,29 @@
 import tkinter as tk
 from tkinter.filedialog import *
 from tkinter import ttk
-import DAckMeasure
-import chan 
-import numpy
+import rigolScope, repeatedTimer, chan 
+#import numpy 
 import matplotlib.pyplot as plt
-import datetime
-import matplotlib.dates as mdates
+import datetime, time, matplotlib.dates as mdates
 import pickle
+import ntpath
+
+
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         container = tk.Frame.__init__(self, parent, *args, **kwargs)
         self.running=False  
         self.elapsed=0
-        self.timebase=1000
+        self.timebase=1      #in Sec !!
         self.setNowTime()
+        self.filename=NONE
     
-        scope=DAckMeasure.DAckMeasure()
+        self.mytimer = repeatedTimer.RepeatedTimer(self.timerUpdateTask)
+        scope=rigolScope.Scope()
         self.chans = []
         for i in range(4):
-            self.chans.append(chan.chan(self, scope, i))
+            self.chans.append(chan.Chan(self, scope, i))
  
         vcmd = (self.register(self.validate),'%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
         self.timebaseBox = tk.Entry(self, validate = 'key', validatecommand = vcmd, justify='right')
@@ -65,17 +68,23 @@ class MainApplication(tk.Frame):
         else: return True
     
     def onstartStopButton(self):
-        self.startStopButton.config(text=("Stop", "Start")[self.running])
-        self.running= not self.running
-        if (self.running):      #if Starting Now !!!!!
+        if (not self.running):      #if Starting Now !!!!!
+            try:        #validate the value before s
+                self.timebase=float(self.timebaseBox.get()) #in Sec
+            except ValueError: return False
             self.elapsed=0
-            self.timebase=int(float(self.timebaseBox.get())*1000)
+            
             for i in range(4):
                 self.chans[i].reset()
 
             self.setNowTime( )
-            self.onTimeUpdate()     #1st update; will perpetuate the rest
-             
+            self.mytimer.start(self.timebase)
+            self.filename=NONE
+        else:
+            self.mytimer.stop()
+        self.startStopButton.config(text=("Stop", "Start")[self.running])
+        self.running= not self.running
+            
     def onSaveFileButton(self):
         name = asksaveasfilename(initialdir=".", filetypes =(("Rigol Data", "*.rigol"),("All Files","*.*")), initialfile=str(self.startDateTimeStr+".rigol"))
         if (name):
@@ -99,11 +108,14 @@ class MainApplication(tk.Frame):
                 with open(name, 'rb') as f:  
                     self.timebase = pickle.load(f)      
                     sv=StringVar()
-                    sv.set(str(self.timebase/1000))
+                    sv.set(str(self.timebase))
                     self.timebaseBox.config(text=sv)
-                    self.setTime(pickle.load(f))
+                    x=pickle.load(f)
+                    self.setTime(x)
                     for i in range(4):
                         self.chans[i].setScopeData(pickle.load(f))
+                    head, tail = ntpath.split(name)
+                    self.filename=tail or ntpath.basename(head)
             except IOError as e:
                print( "I/O error({0}): {1}".format(e.errno, e.strerror))
             except: #handle other exceptions such as attribute errors
@@ -117,60 +129,40 @@ class MainApplication(tk.Frame):
             scopeDatas.append(sd)
             if (sd.samples):
                 sampSize = sd.samples
-        print("self.timebase sampSize ", self.timebase, sampSize)
-
-        #self.timebase is in mSec
-        print("timeDelta = ",datetime.timedelta(seconds=i)/1000)
-        time1 = [self.startTimeRounded + datetime.timedelta(seconds=1)/1000 for i in range(sampSize)]
-        time1 = [self.startTimeRounded + datetime.timedelta(seconds=i)/1000 for i in range(sampSize)]
-        time2 = numpy.linspace(0, self.timebase*sampSize, sampSize)
-        time=time1
-
-        ## 1 plot or 2???
-        vals = [0,0,0]
+        time = [self.startTimeRounded + (datetime.timedelta(seconds=i)*self.timebase) for i in range(sampSize)]
+        
+        vals = [0,0,0]      ## 1 plot or 2???
         for i in range(4):
             vals[scopeDatas[i].plotNum] +=1
         numplots=0
-        if (vals[0]==4):
-            return
-        elif (vals[2] & vals[1]):
-            numplots = 2
-        else:
-            numplots = 1
+        if (vals[0]==4):            return
+        elif (vals[2] & vals[1]):   numplots = 2
+        else:                       numplots = 1
         fig, (plots) = plt.subplots(1,numplots)
 
-        for plot in range(1,3): #1 & 2
-            if (numplots==1):   #plots might not be an array
-                subplot = plots
-            else:
-                subplot=plots[plot-1]
+        for plot in range(1,3): # 1 & 2;  plots might not be an array
+            if (numplots==1):       subplot = plots
+            else:                   subplot=plots[plot-1]
             for i in range(4):
                 sd = scopeDatas[i]
                 if(sd.plotNum==plot):
                     print("sd data - ", sd.data)
                     subplot.plot(time, sd.data, sd.color)  
-                    
-                    plt.gcf().autofmt_xdate()
-                    myFmt = mdates.DateFormatter('%H:%M:%S')
-                    plt.gca().xaxis.set_major_formatter(myFmt)
-
+            subplot.xaxis.set_major_formatter( mdates.DateFormatter('%H:%M:%S'))
+        fig.autofmt_xdate(rotation=90, ha='center')
+        secondline= "\n"+self.filename if (self.filename) else ""
+        plt.suptitle(str(self.startTimeRounded)+secondline)
         plt.show()
         plt.close()
 
-    def onTimeUpdate(self):
-        if (self.running):      
-            self.elapsed += self.timebase/1000
-            self.timeText.config(text=self.elapsed)
-            for i in range(4):
-                self.chans[i].update()
-            self.after(self.timebase, self.onTimeUpdate)
+    def timerUpdateTask(self):
+        self.elapsed += self.timebase
+        self.timeText.config(text=self.elapsed)
+        for i in range(4):
+            self.chans[i].update()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.title("Rigol Data Acquisition Tool Ver 0.0")
+    root.title("Rigol Data Acquisition Tool Ver 1.0")
     MainApplication(root).pack(side="top", fill="both", expand=True)
-#    MainApplication(root)
     root.mainloop()
-
-    ##############################################################
-    ##############################################################

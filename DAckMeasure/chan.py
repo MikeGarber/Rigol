@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class scopeData(object):
+class ScopeData(object):
     def __init__(self):
         self.data = []
         self.reset()
@@ -20,14 +20,14 @@ class scopeData(object):
         self.data.append(value)
         self.samples += 1
 
-class chan(object):
+class Chan(object):
     def __init__(self, root, scope, chanNum):
         self.startRow=0
         self.startCol=1
         self.chanNum = chanNum  # 0 based
         self.scope = scope
         self.combo(root)
-        self.scopeData = scopeData()
+        self.scopeData = ScopeData()
         self.scopeData.color = ['xkcd:yellow', 'xkcd:cyan', 'xkcd:magenta', 'xkcd:blue'][self.chanNum]
 
     def combo(self, root):

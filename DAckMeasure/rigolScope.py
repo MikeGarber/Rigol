@@ -2,7 +2,7 @@ import sys
 import visa
 #import math
 
-class DAckMeasure(object):
+class Scope(object):
     """access to the Rigol, and associated tasks"""
     def __init__(self):
         print ("inited")

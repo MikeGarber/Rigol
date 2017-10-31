@@ -7,11 +7,7 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BasicPlot", "BasicPlot\Basi
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "UI_Rigol_1", "DAckMeasure\UI_Rigol_1.pyproj", "{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "sandBox1", "foolin\sandBox1.pyproj", "{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "pyplot", "pyplot\pyplot.pyproj", "{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Sandbox2", "Sandbox2\Sandbox2.pyproj", "{932F1E55-6F0F-43C2-ABD8-C8FD3CA78D0D}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "sandboxFile", "sandboxFile\sandboxFile.pyproj", "{A2C39CC9-DD8E-46C9-9160-8C9A6E113D33}"
 EndProject
@@ -25,12 +21,8 @@ Global
 		{4767A8F7-739D-47FA-835C-46F64B436E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6F609615-094F-4E36-80DA-6BBA5CEFCDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEB23F0E-DDC4-4055-9BA0-900870AFDAC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BA0BCCC7-65E1-4959-9D38-7E89D59AB9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{932F1E55-6F0F-43C2-ABD8-C8FD3CA78D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{932F1E55-6F0F-43C2-ABD8-C8FD3CA78D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2C39CC9-DD8E-46C9-9160-8C9A6E113D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2C39CC9-DD8E-46C9-9160-8C9A6E113D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
